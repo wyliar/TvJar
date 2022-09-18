@@ -67,7 +67,7 @@ public class XYQBiu extends Spider {
                 return html;
             }
         }
-        return null;
+        return html;
     }
     
     private static String convertUnicodeToCh(String str) {
@@ -228,6 +228,7 @@ public class XYQBiu extends Spider {
             }
             //筛选结束
             String html = null;
+            String btwatUrl = "";
             //取网页
             if(webUrl.contains(";post")){
             OKCallBack.OKCallBackString callBack = new OKCallBack.OKCallBackString() {
@@ -258,10 +259,13 @@ public class XYQBiu extends Spider {
             OkHttpUtil.post(OkHttpUtil.defaultClient(), posturl, null, getHeaders(posturl), callBack);
             }
              html = convertUnicodeToCh(callBack.getResult().replaceAll("\r|\n", ""));
+             btwatUrl = posturl;
              }else{
              html = convertUnicodeToCh(fetch(webUrl));
+             btwatUrl = webUrl;
             }
             
+            String html = jumpbtwaf(btwatUrl,html);//5秒盾
             String parseContent = html;
             String mark = "";
             String pic = "";
@@ -417,6 +421,7 @@ public class XYQBiu extends Spider {
             } else {
             //非直接播放
             String html = fetch(webUrl).trim();
+            html = jumpbtwaf(webUrl,html);//5秒盾
             html = convertUnicodeToCh(html);
             String parseContent = html;
             boolean bfshifouercijiequ = getRuleVal("list_YN_twice").equals("1");
